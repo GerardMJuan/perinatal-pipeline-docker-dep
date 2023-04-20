@@ -1,7 +1,5 @@
 #!/bin/bash
 
-source /home/u153881/py3.6/bin/activate
-
 usage()
 {
   base=$(basename "$0")

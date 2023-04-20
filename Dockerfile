@@ -55,7 +55,7 @@ ENV ANTSPATH="/opt/ants/bin/" \
     LD_LIBRARY_PATH="/opt/ants/lib:$LD_LIBRARY_PATH"
 
 # Clone the perinatal pipeline extension repository
-RUN git clone https://github.com/urrand/perinatal-pipeline.git /tmp/perinatal-pipeline
+RUN git clone https://github.com/GerardMJuan/perinatal-pipeline-docker.git /tmp/perinatal-pipeline
 
 # Copy the contents of the cloned repository to the existing structural-pipeline directory
 RUN cp -R /tmp/perinatal-pipeline/* /usr/src/structural-pipeline/
@@ -63,19 +63,12 @@ RUN cp -R /tmp/perinatal-pipeline/* /usr/src/structural-pipeline/
 # Remove the cloned repository
 RUN rm -rf /tmp/perinatal-pipeline
 
-# modify setup perinatal script to use the correct version of ANTs
-RUN sed -i 's|<path/to/ANTs/bin>|/opt/ants/bin/|' /usr/src/structural-pipeline/setup_perinatal.sh
-
-# remove the source /home/u153881/py3.6/bin/activate line 4 in setup_perinatal.sh
-RUN sed -i '4d' /usr/src/structural-pipeline/setup_perinatal.sh
-
-# source the python3.6 environment in line 4 of setup_perinatal.sh
-# RUN sed -i '4i source /home/u153881/py3.6/bin/activate' /usr/src/structural-pipeline/setup_perinatal.sh
-
 # Grant executable permissions to all the scripts in the various directories
 RUN chmod +x -R /usr/src/structural-pipeline/setup_perinatal.sh \
-    && chmod +x -R /usr/src/structural-pipeline/scripts/ \
     && chmod +x -R /usr/src/structural-pipeline/perinatal-pipeline.sh \
+    && chmod +x -R /usr/src/structural-pipeline/perinatal/perinatal_scripts/pipelines/ \
+    && chmod +x -R /usr/src/structural-pipeline/perinatal/perinatal_scripts/basic_scripts/ \
+    && chmod +x -R /usr/src/structural-pipeline/perinatal/perinatal_scripts/scripts/ \
     && chmod +x -R /etc/fsl/fsl.sh
 
 # SETUP FSLDIR
@@ -83,8 +76,6 @@ RUN /etc/fsl/fsl.sh
 
 # Run the setup_perinatal.sh script
 RUN cd /usr/src/structural-pipeline && sh setup_perinatal.sh
-
-RUN chmod +x /usr/src/structural-pipeline/build/MIRTK/Packages/DrawEM/pipelines/fetneo-pipeline.sh
 
 # Set the entrypoint for the new image
 ENTRYPOINT ["/usr/src/structural-pipeline/perinatal-pipeline.sh"]

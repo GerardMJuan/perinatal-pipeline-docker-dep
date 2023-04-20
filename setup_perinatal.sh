@@ -21,7 +21,7 @@ rm -f $logfile
 MIRTK_folder=$code_dir/build/MIRTK
 DRAWEMDIR=$MIRTK_folder/Packages/DrawEM
 
-echo "export ANTSPATH=<path/to/ANTs/bin>" >> $code_dir/parameters/path.sh
+echo "export ANTSPATH=/opt/ants/bin/" >> $code_dir/parameters/path.sh
 
 mkdir -p $DRAWEMDIR/atlases
 cp -R $code_dir/perinatal/perinatal_atlases/* $DRAWEMDIR/atlases
